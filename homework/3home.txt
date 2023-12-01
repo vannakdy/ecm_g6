@@ -1,0 +1,6 @@
+=== Homework ====
+Build API role
+    - list 
+    - create
+    - update
+    - remove 

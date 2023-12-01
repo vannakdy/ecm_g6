@@ -1,0 +1,24 @@
+# HomeWork 20-11-2023
+    - install xampp
+    - phpmyadmin (GUI)
+    - create a database
+    - create two tables
+        table category (
+            Id 
+            Name
+            Description
+            Status
+            CreateAt
+        )
+        table role (
+            Id 
+            Name
+            Code
+            Status
+            CreateAt
+        )
+    - sql crud
+        sql select, insert, update, delete
+    - node.js + mysql 
+        - list category from database server
+        - list role from database server

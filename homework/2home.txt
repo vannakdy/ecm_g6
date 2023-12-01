@@ -1,0 +1,10 @@
+
+
+=== Homework ====
+Build API category
+    - list 
+    - create
+    - update
+    - remove 
+
+

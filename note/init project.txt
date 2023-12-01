@@ -1,0 +1,16 @@
+node in your PC
+> node -v
+
+init nodejs 
+    - create folder "nodejs"
+    - create file "nodejs/index.js"
+    - in index.js 
+        add "console.log("Hello Nodejs")" > then save
+    - open terminal(cmd)
+    - cd nodejs
+    - node index.js // run file node
+init reactjs 
+    - open terminal(cmd)
+    - > npx create-react-app project_name
+    - > npm start
+    - http://localhost:3000

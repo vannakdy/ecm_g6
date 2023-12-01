@@ -1,0 +1,36 @@
+
+https://expressjs.com/en/resources/middleware/multer.html
+
+exports.upload = multer({
+    storage : multer.diskStorage({
+        destination : function (req,file,callback){
+            callback(null,"C:/xampp/htdocs/project/image_ecm_g3")
+        },
+        filename: function (req, file, cb) {
+            const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+            cb(null, file.fieldname + '-' + uniqueSuffix)
+        }
+    }),
+    limits : {
+        fileSize : (1024*1024)*3
+    },
+    fileFilter:(req, file, cb) => {
+       if (file.mimetype !== 'image/png' && file.mimetype !== 'image/jpg' && file.mimetype !== 'image/jpeg') {
+        cb(null, false);
+       } else {
+        cb(null, true);
+       }
+    }
+})
+
+
+
+Call in controller
+// ,upload.single("image")
+// ,upload.none()
+// ,upload.any()
+// ,upload.array("image")
+
+// ,upload.fields([{name:"image",maxCount:2}])
+// ,upload.fields([{name:"image",maxCount:1},{name:"image_details",maxCount:10}])
+
