@@ -2,10 +2,10 @@
 
 # dependencies
 /node-express/node_modules
-/web_reactjs/node_modules
+/webreactjs/node_modules
 
 # production
-/web_reactjs/build
+/webreactjs/build
 
 
 /.pnp
