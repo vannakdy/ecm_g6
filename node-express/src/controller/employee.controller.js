@@ -1,17 +1,119 @@
 
 const db = require("../util/db");
 const { removeFile, Config } = require("../util/helper");
+const bcrypt = require("bcrypt");
+const { getPermissionMenuByRoleCode } = require("./permission.controller");
 
 const getAll = async (req,res) => {
    try{
         var sql = "SELECT * FROM employee"
         const list = await db.query(sql);
+        // var condition1 = (2 == 2)
+        // var condition2 = (null == null)
+        // var condition3 = (null == "null")
         res.json({
-            list: list
+            list: list,
+            // condition1 : condition1,
+            // condition2 : condition2,
+            // condition3 : condition3,
         })
    }catch(error){
         res.sendStatus(500)
    }
+}
+
+const setPassword = async (req,res) => {
+    try{
+        const {Username,Password,ConfirmPassword } = req.body;
+        var message = {};
+        // validate field requered
+        if(Username == null || Username == ""){
+            message.Username = "Please fill in Username!";
+        }
+        if(Password == null || Password == ""){
+            message.Password = "Please fill in Password!";
+        }
+        if(Password != ConfirmPassword){
+            message.Password = "Password and Confirm password not match!";
+        }
+        if(Object.keys(message).length > 0){
+            res.json({
+                error:true,
+                message:message
+            })
+            return false
+        }
+        // Tel, Password, ConfirmPassword : have
+        // bycrypt
+        var hashPassword = await bcrypt.hashSync(Password,10) // 123456 => LKJEROIJ@#OJ$O*@)$(*&#@)$(#@)
+        var sql =  "UPDATE employee SET Password = ? WHERE Tel = ?";
+        const data = await db.query(sql,[hashPassword,Username])
+        res.json({
+            message: data.affectedRows ? "Password set success" : "Somthing wrong!"
+        })
+    }catch(err){
+        res.status(500).send({
+          message: err.message
+        });
+    }
+}
+
+const login = async (req,res)=>{
+    try{
+        const {
+            Username,Password
+        } = req.body;
+        var message = {};
+        if(Username == null || Username == ""){
+            message.Username = "Please fill in Username!";
+        }
+        if(Password == null || Password == ""){
+            message.Password = "Please fill in Password!";
+        }
+        if(Object.keys(message).length > 0){
+            res.json({
+                error:true,
+                message:message
+            })
+            return false
+        }
+        // Check is Existing user? by Username
+        const user = await db.query("SELECT * FROM employee WHERE Tel = ? ",[Username]);
+        if(user.length == 0){
+            res.json({
+                error:true,
+                message:"Username does't exist!"
+            })
+        }else{
+            // Verify password (Pass_From_Client , Pass_From_Db) | (123456 , ËRERERWRE234234234@#$#$%$#)
+            var PasswordFromDB = user[0].Password
+            if(PasswordFromDB == null){
+                res.json({
+                    error:true,
+                    message:"Please activate account!"
+                })
+            }
+            const isCorrect = await bcrypt.compareSync(Password,PasswordFromDB);
+            delete user[0].Password // Remove properties Password
+            delete user[0].Salary // Remove properties Password
+            if(isCorrect){
+                res.json({
+                    message:"Login success",
+                    profile : user[0],
+                    menu : getPermissionMenuByRoleCode(user[0].Role)
+                })
+            }else{
+                res.json({
+                    error:true,
+                    message:"Password incorrect!"
+                })
+            }
+        }
+    }catch(e){
+        res.status(500).send({
+            message:e.message
+        })
+    }
 }
 
 //Id Firstname, Lastname, Gender, Dob, Image, Tel, Email, Address, Salary, Role
@@ -33,7 +135,9 @@ const create = async (req,res) => {
             data : data
         })
     }catch(error){
-        res.sendStatus(500)
+        res.status(500).send({
+            message:error.message
+        })
     }
     
 }
@@ -95,7 +199,9 @@ module.exports = {
     getAll,
     create,
     update,
-    remove
+    remove,
+    setPassword,
+    login
 }
 
 

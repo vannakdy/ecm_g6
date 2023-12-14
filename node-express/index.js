@@ -1,7 +1,8 @@
 const express = require("express"); // import library express
+const cors = require("cors")
 const app = express();
 app.use(express.json()) // allow serer get json from requeset
-
+app.use( cors({origin:"*"}))
 app.get("/",(req,res)=>{
     // handle requrest from client 
     res.send("Hello Express in nodejs")
