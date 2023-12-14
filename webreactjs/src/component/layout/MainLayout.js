@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     DownOutlined,
     MenuFoldOutlined,
@@ -13,11 +13,27 @@ import {
 } from '@ant-design/icons';
 import { Layout, Menu, Button, theme, Dropdown, Space } from 'antd';
 import { Outlet, useNavigate } from "react-router-dom"
+import { getProfile, removeStorage } from '../../share/helper';
 const { Header, Sider, Content } = Layout;
 const App = () => {
+    var profile = getProfile();
     const navigate = useNavigate();
     const [collapsed, setCollapsed] = useState(false);
 
+    const onLoginOut = () => {
+        removeStorage();
+        navigate("/login")
+    }
+
+    useEffect(()=>{
+        if(profile == null){
+            onLoginOut();
+        }
+    },[profile])
+
+    if(profile == null){
+        return null;
+    }
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
@@ -142,15 +158,14 @@ const App = () => {
                                     items,
                                     onClick:(e)=>{
                                         if(e.key == "/logout"){
-                                            navigate("/login")
+                                            onLoginOut()
                                         }
-                                        ////
                                     }
                                 }}
                             >
                                 <a onClick={(e) => e.preventDefault()}>
                                     <Space>
-                                        Mr.Dara
+                                        {profile?.Firstname}-{profile?.Lastname}
                                         <DownOutlined />
                                     </Space>
                                 </a>
