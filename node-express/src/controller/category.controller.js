@@ -1,9 +1,26 @@
 
 const db = require("../util/db");
 const getAll = (req,res) =>{
-    // db.query("sql statement","handler")
-    var sql = "SELECT * FROM category"
-    db.query(sql,(error,rows)=>{
+    const {
+        txtSearch,
+        txtStatus
+    } = req.query;
+
+    var sqlSelect = "SELECT * FROM category";
+    var sqlParam = [];
+    var sqlWhere = " WHERE TRUE ";
+    if(txtSearch != "" && txtSearch != null){
+        sqlWhere += " AND (Name LIKE ? OR Description LIKE ?) ";
+        sqlParam.push("%"+txtSearch+"%")
+        sqlParam.push("%"+txtSearch+"%")
+    }
+    if(txtStatus != "" && txtStatus != null){
+        sqlWhere += " AND Status = ? ";
+        sqlParam.push(txtStatus)
+    }
+    var orderBy = " ORDER BY Id DESC"
+    var sql =  sqlSelect + sqlWhere + orderBy
+    db.query(sql,sqlParam,(error,rows)=>{
         if(error){
             res.json({
                 message:error,

@@ -1,3 +1,16 @@
+import moment from "moment"
+
+export const Config = {
+    image_path : "http://localhost:81/project/image_6/"
+}
+
+export const formatDateClient = (date) => {
+    if(date != "" && date != null){
+        return moment(date).format("DD/MM/YYYY hh:mm")
+    }
+    return false;
+    
+}
 
 export const getProfile = () => {
     var profile = localStorage.getItem("profile");

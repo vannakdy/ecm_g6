@@ -89,7 +89,7 @@ const App = () => {
                         {
                             key: '/category',
                             icon: <PicRightOutlined />,
-                            label: 'Product',
+                            label: 'Category',
                         },
                         {
                             key: '/product',
@@ -185,7 +185,7 @@ const App = () => {
                         borderRadius: borderRadiusLG,
                     }}
                 >
-                    Content
+                    {/* Content */}
                     <Outlet />
                 </Content>
             </Layout>
