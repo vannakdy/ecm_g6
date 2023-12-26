@@ -6,16 +6,20 @@ const { getPermissionMenuByRoleCode } = require("./permission.controller");
 
 const getAll = async (req,res) => {
    try{
-        var sql = "SELECT * FROM employee"
+        var sql = "SELECT "+
+                   " e.*,"+
+                   " r.Name as RoleName"+
+                " FROM employee as e"+
+                " LEFT JOIN Role as r ON e.RoleId = r.Id"+
+                " ORDER BY Id DESC";    
+        var sqlCount = " SELECT COUNT(Id) as totalRecords FROM employee;";
         const list = await db.query(sql);
-        // var condition1 = (2 == 2)
-        // var condition2 = (null == null)
-        // var condition3 = (null == "null")
+        const total = await db.query(sqlCount)
+        const roleList = await db.query("SELECT * FROM Role")
         res.json({
             list: list,
-            // condition1 : condition1,
-            // condition2 : condition2,
-            // condition3 : condition3,
+            totalRecords: total[0].totalRecords,
+            roleList : roleList
         })
    }catch(error){
         res.sendStatus(500)
@@ -121,14 +125,14 @@ const login = async (req,res)=>{
 const create = async (req,res) => {
     try{
         const {
-            Firstname, Lastname, Gender, Dob, Tel, Email, Address, Salary, Role
+            Firstname, Lastname, Gender, Dob, Tel, Email, Address, Salary, RoleId
         } = req.body
         var filename = null
         if(req.file){
             filename = req.file.filename
         }
-        var sql = "INSERT INTO employee (Firstname, Lastname, Gender, Dob, Image, Tel, Email, Address, Salary, Role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-        var param = [Firstname, Lastname, Gender, Dob, filename, Tel, Email, Address, Salary, Role]
+        var sql = "INSERT INTO employee (Firstname, Lastname, Gender, Dob, Image, Tel, Email, Address, Salary, RoleId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        var param = [Firstname, Lastname, Gender, Dob, filename, Tel, Email, Address, Salary, RoleId]
         const data = await db.query(sql,param);
         res.json({
             message : data.affectedRows ? "Insert success!" : "Somthing wrong!",
@@ -145,14 +149,16 @@ const create = async (req,res) => {
 const update = async(req,res) => {
     try{
         const {
-            Id, Firstname, Lastname, Gender, Dob, Tel, Email, Address, Salary, Role
+            Id, Firstname, Lastname, Gender, Dob, Tel, Email, Address, Salary, RoleId, Image
         } = req.body
         var filename = null
         if(req.file){
             filename = req.file.filename
+        }else{
+            filename = Image
         }
-        var sql = "UPDATE employee SET Firstname=?, Lastname=?, Gender=?, Dob=?, Image=?, Tel=?, Email=?, Address=?, Salary=?, Role=? WHERE Id = ?"
-        var param = [Firstname, Lastname, Gender, Dob, filename, Tel, Email, Address, Salary, Role, Id]
+        var sql = "UPDATE employee SET Firstname=?, Lastname=?, Gender=?, Dob=?, Image=?, Tel=?, Email=?, Address=?, Salary=?, RoleId=? WHERE Id = ?"
+        var param = [Firstname, Lastname, Gender, Dob, filename, Tel, Email, Address, Salary, RoleId, Id]
         const data = await db.query(sql,param);
         res.json({
             message : data.affectedRows ? "Update success!" : "Somthing wrong!",

@@ -1,0 +1,23 @@
+ALTER TABLE employee
+ADD FOREIGN KEY (RoleId) REFERENCES Role(Id);
+
+
+
+SELECT 
+	employee.Id,
+	employee.Firstname,
+    employee.Lastname,
+    employee.RoleId,
+    Role.Name
+FROM employee
+INNER JOIN Role ON employee.RoleId = Role.Id;
+
+
+SELECT 
+	e.Id,
+	e.Firstname,
+    e.Lastname,
+    e.RoleId,
+    r.Name
+FROM employee as e
+INNER JOIN Role as r ON e.RoleId = r.Id;
