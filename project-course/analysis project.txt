@@ -1,0 +1,93 @@
+E-Commerce (Coputer Shop) Backend 
+
+employee 
+    Id
+    Firstname
+    Lastname
+    Gender
+    RoleId
+
+role 
+    Id
+    Name 
+    Code 
+    Description
+    Status 
+    CreateAt 
+
+category
+    Id(PK) 
+    Name 
+    Code 
+    Description
+    Status
+    CreateAt
+
+product
+    Id(PK)
+    CategoryId(FK)
+    Name 
+    Image
+    Description
+    Price 
+    Qty
+    Status
+    CreateAt
+    
+product_image
+    Id 
+    ProductId(FK) 
+    Image
+    Status
+customer 
+    Id 
+    Firstname,.....
+    
+customer_address
+    Id(PK)
+    CustomerId(FK)
+    Adresss
+    ProvinceId
+    CreateAt 
+
+province
+    Id
+    Name
+    Status 
+
+cart    
+    Id(PK)
+    CustomerId(FK)
+    ProductId(FK)
+    Qty 
+
+wishlist
+    Id(PK)
+    CustomerId(PK)
+    ProductId(PK)
+    CreateAt 
+
+order 
+    Id(PK)
+    CustomerId(FK) // can null 
+    OrderStatusId(FK) 
+    PaymethMethodId(FK)
+    Total
+    CreatAt  
+
+order_detail
+    Id(PK)
+    OrderId(FK)
+    ProductId 
+    Qty
+    Total 
+
+order_status
+    Id 
+    Name 
+    Code 
+
+payment_method
+    Id 
+    Name
+    Code 
