@@ -9,6 +9,9 @@ import MainLayout from "./component/layout/MainLayout";
 import MainLayoutLogin from "./component/layout/MainLayoutLogin";
 import RolePage from "./page/role/RolePage";
 import CategoryPage from "./page/category/CategoryPage";
+import PaymentMethod from "./page/payment-method/PaymentMethod";
+import InvoiceStatus from "./page/invoice-status/InvoiceStatus";
+import ProductPage from "./page/product/ProductPage";
 
 function App(){
 
@@ -20,10 +23,11 @@ function App(){
           <Route path="" element={<HomePage/>} />
           <Route path="/employee" element={<EmployeePage/>} />
           <Route path="/customer" element={<CustomerPage/>} />
-          <Route path="/about" element={<CustomerPage/>} />
-          <Route path="/product" element={<CustomerPage/>} />
+          <Route path="/product" element={<ProductPage/>} />
           <Route path="/category" element={<CategoryPage/>} />
           <Route path="/role" element={<RolePage/>} />
+          <Route path="/payment_method" element={<PaymentMethod/>} />
+          <Route path="/invoice_status" element={<InvoiceStatus/>} />
           <Route path="*" element={<RoutNotFound/>} />
         </Route>
 

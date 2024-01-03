@@ -14,7 +14,10 @@ app.get("/",(req,res)=>{
 require("./src/route/customer.route")(app) // short import and call
 require("./src/route/employee.route")(app)
 require("./src/route/category.route")(app)
+require("./src/route/product.route")(app)
 require("./src/route/role.route")(app)
+require("./src/route/payment_method.route")(app)
+require("./src/route/invoice_status.route")(app)
 
 
 // requred

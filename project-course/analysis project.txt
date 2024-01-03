@@ -39,6 +39,24 @@ product_image
     ProductId(FK) 
     Image
     Status
+
+product_relate
+    id PK 
+    product_id FK
+    product_relate_id FK 
+
+    id  product_id  product_relate_id
+    1   1          101
+    1   1          102
+    1   1          103
+    1   1          104
+    1   1          105
+
+
+product_recommend 
+product_recently
+
+
 customer 
     Id 
     Firstname,.....

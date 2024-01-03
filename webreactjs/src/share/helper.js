@@ -4,9 +4,10 @@ export const Config = {
     image_path : "http://localhost:81/project/image_6/"
 }
 
-export const formatDateClient = (date) => {
+export const formatDateClient = (date,isShowTime=false) => {
     if(date != "" && date != null){
-        return moment(date).format("DD/MM/YYYY hh:mm")
+        var format = (isShowTime ? "DD/MM/YYYY hh:mm" : "DD/MM/YYYY")
+        return moment(date).format(format)
     }
     return false;
     

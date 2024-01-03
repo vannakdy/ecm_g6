@@ -97,11 +97,6 @@ const App = () => {
                             label: 'Product',
                         },
                         {
-                            key: '/role',
-                            icon: <UploadOutlined />,
-                            label: 'Role',
-                        },
-                        {
                             key: '/shift',
                             icon: <UploadOutlined />,
                             label: 'Shift',
@@ -110,6 +105,11 @@ const App = () => {
                             key: '/shift_detils',
                             icon: <UploadOutlined />,
                             label: 'Shift Details',
+                        },
+                        {
+                            key: '/role',
+                            icon: <UploadOutlined />,
+                            label: 'Role',
                         },
                         {
                             key: '/payment_method',
