@@ -131,6 +131,9 @@ const EmployeePage = () => {
             </div>
             <Table
                 dataSource={list}
+                scroll={{
+                    y: 440,
+                }}
                 columns={[
                     {
                         key: "No",

@@ -1,0 +1,50 @@
+
+.contain_g1{
+    border: 1px solid #EEE;
+    padding: 15px;
+}
+
+.contain_g2{
+    border: 1px solid #EEE;
+    padding: 15px;
+}
+.contain_search{
+    padding-left: 10px;
+    padding-top: 10px;
+}
+
+.rowProduct{
+    display: flex;
+    justify-content:space-between;
+    padding: 10px;
+    margin: 10px;
+    background-color: antiquewhite;
+    border-radius: 10px;
+
+}
+
+.txtId{
+    font-weight: bold;
+}
+.txtName{
+    font-weight: bold;
+}
+.txtDes{
+    font-size: 11px;
+    color: #888;
+}
+
+.txtPrice{
+    font-weight: bold;
+    color: rgb(237, 18, 55);
+}
+.txtQty{
+
+}
+.rowSummary{
+    display: flex;
+    justify-content: space-between;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-top: 10px;
+}

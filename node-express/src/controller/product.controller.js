@@ -43,6 +43,20 @@ const getAll = async (req,res) => {
         res.sendStatus(500)
     }
 }
+
+const getOne =  async (req,res) => {
+   try{
+        const {
+            id
+        } = req.body;
+        const list = await db.query("SELECT * FROM product WHERE id = ?",[id])
+        res.json({
+            list:list
+        })
+   }catch(e){
+        res.sendStatus(500)
+   }
+}
 const create = async (req,res) => {
     try{
         const {
@@ -103,5 +117,6 @@ module.exports = {
     getAll,
     create,
     update,
-    remove
+    remove,
+    getOne
 }

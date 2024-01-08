@@ -37,3 +37,15 @@
     transform: rotate(360deg);
   }
 }
+
+.txtMain{
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.txtPrice{
+  font-weight: bold;
+  font-size: 14px;
+  color: rgb(237, 18, 55);
+}

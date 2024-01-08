@@ -1,0 +1,1 @@
+INSERT INTO `customer`(`id`, `firstname`, `lastname`, `gender`, `email`, `tel`, `password`, `is_active`) VALUES ('1','Sok','Bona','1','1','092889966','123456','1')

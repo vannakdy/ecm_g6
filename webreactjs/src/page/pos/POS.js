@@ -4,22 +4,14 @@ import { Button, Col, Divider, Form, Image, Input, InputNumber, Modal, Row, Sele
 import { EditFilled, DeleteFilled } from "@ant-design/icons"
 import moment from "moment"
 import { Config, formatDateClient } from "../../share/helper";
-// id	
-// category_id
-// name
-// description	
-// price	
-// quantity	
-// image	
-// is_active	
-// create_at
-const ProductPage = () => {
+import styles from "./styles.module.css"
+const POS = () => {
 
     const [list, setList] = useState([])
+    const [txtSearchId, setTxtSearchId] = useState([])
     const [categoryList, setCategoryList] = useState([]);
     const [brandList, setBrandList] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [total, setTotal] = useState(0)
     const [listRole, setListRole] = useState([])
     const [open, setOpen] = useState(false)
     const [image, setImage] = useState(null)
@@ -27,27 +19,56 @@ const ProductPage = () => {
     const [formRef] = Form.useForm()
     const inputFileRef = React.useRef();
 
-    useEffect(() => {
-        getList()
-    }, [])
+    const [subTotal,setSubTotal] = useState(0)
+    const [discount,setDiscount] = useState(0)
+    const [tx,setTax] = useState(0)
+    const [total,setTotal] = useState(0)
 
-    const getList = async () => {
-        // get data from api 
+    const getList = async (ParamId) => {
         setLoading(true);
-        const res = await request("product", "get", {})
-        setTimeout(() => {
-            setLoading(false);
-        }, 1000);
-
-        if (res) {
-            setList(res.list);
-            setCategoryList(res.list_category);
-            setBrandList(res.list_brand);
+        var param = {
+            id:ParamId
         }
-    }
+        const res = await request("product/getone", "post",param )
+        setLoading(false);
+        if (res && res.list.length > 0) {
+            var listTmp = res.list;
+            if(listTmp.length > 0){;
+                listTmp[0].qty = 1;
+            }
+            // find is existing product id => update qty
+            var isExisting = 0;
+            for(var i = 0 ; i < list.length ; i ++){
+                if(list[i].id == listTmp[0].id){ // => true => mean have existing product
+                    list[i].qty = list[i].qty + 1;
+                    listTmp = [...list];
+                    isExisting = 1;
+                    break;
+                }
+            }
+            // end
+            
+            if(isExisting == 0){
+                listTmp =  [...listTmp, ...list]; // concat data from api + current list
+            }
 
-    const onClickNew = () => {
-        setOpen(true)
+            // find subtotal, total
+            var sub_total = 0;
+            listTmp.map((item,index)=>{
+                sub_total = sub_total +  (item.price * item.qty)
+            })
+            var total = sub_total;
+            // end find subtotal, total
+
+           
+
+            setSubTotal(sub_total);
+            setTotal(total);
+            setList(listTmp);
+            setTxtSearchId("");
+        }else{
+            message.info("Product not found!")
+        }
     }
 
     const onCloseModal = () => {
@@ -91,32 +112,6 @@ const ProductPage = () => {
 
     }
 
-    const onRmove = async (data) => {
-        var param = {
-            id: data.id
-        }
-        const res = await request("product", "delete", param)
-        if (res) {
-            message.success(res.message);
-            getList();
-        }
-    }
-
-    const onClickEdit = (data) => {
-        setOpen(true)
-        setImagePreView(Config.image_path + data.image)
-        formRef.setFieldsValue({
-            name: data.name,
-            category_id: data.category_id,
-            brand: data.brand,
-            price: data.price,
-            quantity: data.quantity,
-            is_active: data.is_active+"",
-            description: data.description,
-            image: data.image,
-            id:data.id
-        })
-    }
 
     const onRemoveImage = () => {
         setImagePreView(null);
@@ -127,121 +122,110 @@ const ProductPage = () => {
         })
     }
 
+    const onSearchProductId = (value) => {
+        if(value != null && value != ""){
+            getList(value)
+        }
+      
+    }
+
+    const handleCheckout = async() => {
+        if(list.length == 0 ){
+            return null
+        }
+        var param = {
+            customer_id : 1,
+            user_id : 1,
+            order_status_id : 7,
+            payment_method_id : 1,
+            total : total,
+            note : "",
+            is_paid : true,
+            array_product : list
+        }
+        const res = await request("order","post",param);
+        if(res){
+            message.success(res.message)
+            setList([])
+        }else{
+            message.error("Something wrong!")
+        }
+    }
+
     return (
         <div>
-            <Spin spinning={loading}>
-                <div style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    marginBottom: 10
-                }}>
-                    <div>
-                        <div>Product</div>
-                        <div>{total}.Items</div>
+            <div className="txtMain">POS</div>
+            <Row gutter={5}>
+                <Col className={styles.contain_g1} span={16}>
+                    <div className={styles.contain_search}>
+                        <Input.Search
+                            value={txtSearchId}
+                            placeholder="Prodoct Id" 
+                            style={{width:200}} 
+                            onSearch={onSearchProductId}
+                            onChange={(e)=>{
+                                setTxtSearchId(e.target.value)
+                            }}
+                            allowClear={true}
+                        />
                     </div>
-                    <div>
-                        <Button type="primary" onClick={onClickNew}>New</Button>
-                    </div>
-                </div>
-                <Table
-                    dataSource={list}
-                    columns={[
-                        {
-                            key: "No",
-                            title: "No",
-                            dataIndex: "id",
-                            render: (value, rows, index) => index + 1
-                        },
-                        {
-                            key: "Id",
-                            title: "Id",
-                            dataIndex: "id"
-                        },
-                        {
-                            key: "name",
-                            title: "name",
-                            dataIndex: "name"
-                        },
-                        {
-                            key: "category_id",
-                            title: "Category",
-                            dataIndex: "category_name",
-                        },
-                        {
-                            key: "description",
-                            title: "description",
-                            dataIndex: "description",
-                        },
-                        {
-                            key: "quantity",
-                            title: "quantity",
-                            dataIndex: "quantity",
-                        },
-                        {
-                            key: "price",
-                            title: "price",
-                            dataIndex: "price",
-                        },
-                        {
-                            key: "is_active",
-                            title: "Status",
-                            dataIndex: "is_active",
-                            render : (value) => <Tag color={value ? "green" : "red-inverse"}>{value ? "Actived" : "Disabled"}</Tag>
-                            // render : (value) => value == 1 ? <Tag color="green">Actived</Tag> : <Tag color="pink">Diabled</Tag>
-                            // render : (value) => {
-                            //     if(value == 1){
-                            //         return (
-                            //             <Tag color="green">Actived</Tag>
-                            //         )
-                            //     }else{
-                            //         return (
-                            //             <Tag color="pink">Diabled</Tag>
-                            //         )
-                            //     }
-                                
-                            // }
-                        },
-                        {
-                            key: "Image",
-                            title: "Image",
-                            dataIndex: "image",
-                            render: (value) => {
-                                if (value != "" && value != null && value != 'null') {
-                                    return (
-                                        <Image
-                                            src={Config.image_path + value}
-                                            width={60}
+                    {list.map((item,index)=>{
+                        return (
+                            <div className={styles.rowProduct} key={index}>
+                                <div style={{display:'flex'}}>
+                                    <div style={{marginRight:15}}>
+                                        <Image 
+                                            width={80}
+                                            src={Config.image_path+item.image}
                                         />
-                                    )
-                                } else {
-                                    return (
-                                        <div style={{
-                                            width: 60,
-                                            height: 60,
-                                            backgroundColor: "#EEE"
-                                        }} />
-                                    )
-                                }
+                                    </div>
+                                    <div>
+                                        <div className={styles.txtId}>ID : {item.id}</div>
+                                        <div className={styles.txtName}>{item.name}</div>
+                                        <div className={styles.txtDes}>{item.description}</div>
+                                        <div className={styles.txtQty}>Stock : {item.quantity}</div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div className={styles.txtPrice} >{"$"+item.price.toFixed(2)}</div>
+                                    <div className={styles.txtQty}>Qty : {item.qty}</div>
+                                    
+                                </div>
+                            </div>
 
-                            }
-                        },
-                        {
-                            key: "Action",
-                            title: "Action",
-                            dataIndex: "Action",
-                            render: (value, data) => {
-                                return (
-                                    <Space>
-                                        <Button onClick={() => onClickEdit(data)} type="primary" icon={<EditFilled />} />
-                                        <Button onClick={() => onRmove(data)} danger icon={<DeleteFilled />} />
-                                    </Space>
-                                )
-                            }
-                        },
+                        )
+                    })}
+                </Col>
+                <Col style={{padding:15}} className={styles.contain_g2} span={8}>
+                    <div className="txtMain">Summary</div>
+                    <Input placeholder="Customer" />
+                    <Input placeholder="Payment Method" />
+                    <Input placeholder="Order status" />
+                    <div className={styles.rowSummary}>
+                        <div className="txtMain" >Sub Total</div>
+                        <div className="txtPrice">{"$"+subTotal.toFixed(2)}</div>
+                    </div>
+                    <div className={styles.rowSummary}>
+                        <div className="txtMain" >Discount</div>
+                        <div className="txtPrice">
+                            <InputNumber size="small" value={0} />
+                        </div>
+                    </div>
+                    <div className={styles.rowSummary}>
+                        <div className="txtMain" >Tax</div>
+                        <div className="txtPrice">
+                            <InputNumber size="small" value={0} />
+                        </div>
+                    </div>
+                    <Divider />
+                    <div className={styles.rowSummary}>
+                        <div className="txtMain" >Total</div>
+                        <div className="txtPrice">{"$"+total.toFixed(2)}</div>
+                    </div>
+                    <Button block onClick={handleCheckout} type="primary">Checkout</Button>
+                </Col>
+            </Row>
 
-                    ]}
-                />
-            </Spin>
             <Modal
                 open={open}
                 onCancel={onCloseModal}
@@ -387,4 +371,4 @@ const ProductPage = () => {
     )
 }
 
-export default ProductPage;
+export default POS;

@@ -96,20 +96,25 @@ const App = () => {
                             icon: <UnorderedListOutlined />,
                             label: 'Product',
                         },
-                        {
-                            key: '/shift',
-                            icon: <UploadOutlined />,
-                            label: 'Shift',
-                        },
-                        {
-                            key: '/shift_detils',
-                            icon: <UploadOutlined />,
-                            label: 'Shift Details',
-                        },
+                        // {
+                        //     key: '/shift',
+                        //     icon: <UploadOutlined />,
+                        //     label: 'Shift',
+                        // },
+                        // {
+                        //     key: '/shift_detils',
+                        //     icon: <UploadOutlined />,
+                        //     label: 'Shift Details',
+                        // },
                         {
                             key: '/role',
                             icon: <UploadOutlined />,
                             label: 'Role',
+                        },
+                        {
+                            key: '/pos',
+                            icon: <UploadOutlined />,
+                            label: 'Pos',
                         },
                         {
                             key: '/payment_method',

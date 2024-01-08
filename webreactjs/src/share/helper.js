@@ -21,6 +21,14 @@ export const getProfile = () => {
     return null;
 }
 
+export const getUserId = () => {
+    const profile = getProfile();
+    if(profile){
+        return profile.Id;
+    }
+    return null;
+}
+
 export const getMenu = () => {
     var menu = localStorage.getItem("menu");
     if(menu != null && menu != ""){

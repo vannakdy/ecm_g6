@@ -18,6 +18,7 @@ require("./src/route/product.route")(app)
 require("./src/route/role.route")(app)
 require("./src/route/payment_method.route")(app)
 require("./src/route/invoice_status.route")(app)
+require("./src/route/order.route")(app)
 
 
 // requred

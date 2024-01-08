@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react"
 import {request} from "../../share/request";
 import {Button, Form, Input, Modal, Select, Space, Table, Tag, message} from "antd";
-import { formatDateClient } from "../../share/helper";
+import { formatDateClient, getUserId } from "../../share/helper";
 import {DeleteFilled,EditFilled,FileAddFilled} from "@ant-design/icons"
 const CategoryPage = () => {
 
@@ -40,11 +40,11 @@ const CategoryPage = () => {
     }
 
     const onFinish = async (value) => {
-       
         var param = {
             Name : value.Name,
             Description : value.Description,
-            Satus : value.Status
+            Satus : value.Status,
+            UserId : getUserId()
         }
         var method = "post"
         if(IdHiden){ // case update 

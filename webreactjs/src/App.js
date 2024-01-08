@@ -1,3 +1,4 @@
+import "./App.css";
 import {BrowserRouter,Routes,Route} from "react-router-dom"
 import HomePage from "./page/home/HomePage";
 import EmployeePage from "./page/employee/EmployeePage";
@@ -12,6 +13,7 @@ import CategoryPage from "./page/category/CategoryPage";
 import PaymentMethod from "./page/payment-method/PaymentMethod";
 import InvoiceStatus from "./page/invoice-status/InvoiceStatus";
 import ProductPage from "./page/product/ProductPage";
+import POS from "./page/pos/POS";
 
 function App(){
 
@@ -26,6 +28,7 @@ function App(){
           <Route path="/product" element={<ProductPage/>} />
           <Route path="/category" element={<CategoryPage/>} />
           <Route path="/role" element={<RolePage/>} />
+          <Route path="/pos" element={<POS/>} />
           <Route path="/payment_method" element={<PaymentMethod/>} />
           <Route path="/invoice_status" element={<InvoiceStatus/>} />
           <Route path="*" element={<RoutNotFound/>} />
